@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>AUREX — Riqueza en Expansión</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --gold:#C9952A;--gold-l:#F0C96B;--bg:#06080a;--green:#1D9E75;
+  --surface:#0d1117;--surface2:#131920;--border:#1e2832;
+  --text:#f0ede8;--muted:#6b7a8d;--danger:#e05252;
+}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;overflow:hidden}
+#root{display:flex;flex-direction:column;height:100%;max-width:430px;margin:0 auto;position:relative;overflow:hidden}
+
+/* ── LOGIN ── */
+#login-screen{position:absolute;inset:0;background:var(--bg);z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;background-image:radial-gradient(ellipse 60% 50% at 50% 0%, rgba(201,149,42,0.12) 0%, transparent 70%)}
+.login-logo{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;letter-spacing:0.08em;color:var(--gold);margin-bottom:.25rem}
+.login-tagline{font-size:.75rem;letter-spacing:.25em;color:var(--muted);text-transform:uppercase;margin-bottom:3rem}
+.login-card{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.75rem;display:flex;flex-direction:column;gap:1rem}
+.login-card label{font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:.25rem;display:block}
+.login-card input{width:100%;background:#06080a;border:1px solid var(--border);border-radius:10px;padding:.85rem 1rem;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.95rem;outline:none;transition:border-color .2s}
+.login-card input:focus{border-color:var(--gold)}
+.btn-login{width:100%;background:var(--gold);border:none;border-radius:10px;padding:1rem;font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;color:#06080a;letter-spacing:.05em;cursor:pointer;margin-top:.5rem;transition:opacity .2s}
+.btn-login:active{opacity:.85}
+.login-error{color:var(--danger);font-size:.8rem;text-align:center;display:none}
+
+/* ── TOP BAR ── */
+#topbar{padding:1.5rem 1.25rem 1.25rem;display:flex;flex-direction:column;align-items:center;position:relative;flex-shrink:0;text-align:center}
+.topbar-badge{font-size:.65rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);background:rgba(201,149,42,.12);border:1px solid rgba(201,149,42,.3);border-radius:20px;padding:.3rem .9rem;margin-bottom:.75rem}
+.topbar-welcome{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:700;color:#fff;line-height:1}
+.topbar-brand{font-family:'Syne',sans-serif;font-size:2.6rem;font-weight:800;letter-spacing:.12em;color:var(--gold);line-height:1.1;margin-bottom:.6rem}
+.topbar-sub{font-size:.78rem;color:var(--muted);line-height:1.6;max-width:300px;margin-bottom:1rem}
+.topbar-quote{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.85rem 1rem;font-size:.78rem;color:var(--muted);font-style:italic;line-height:1.5;width:100%}
+.topbar-quote span{display:block;margin-top:.4rem;font-size:.7rem;color:var(--gold);font-style:normal;font-weight:600;letter-spacing:.05em}
+.topbar-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-l));display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:700;font-size:.85rem;color:#06080a;cursor:pointer;flex-shrink:0;position:absolute;right:1.25rem;top:1.25rem}
+
+/* ── MAIN CONTENT ── */
+#main{flex:1;overflow-y:auto;overflow-x:hidden;padding-bottom:80px;-webkit-overflow-scrolling:touch}
+#main::-webkit-scrollbar{display:none}
+
+/* ── PHRASE BANNER ── */
+.phrase-banner{margin:0 1rem .75rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.85rem 1rem;font-size:.82rem;color:var(--muted);line-height:1.5;font-style:italic;text-align:center}
+.phrase-banner strong{color:var(--gold-l);font-style:normal}
+
+/* ── SECTION TITLE ── */
+.sec-title{font-family:'Syne',sans-serif;font-size:.65rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);padding:0 1rem .6rem}
+
+/* ── MODULE CARDS ── */
+.card-grid{display:flex;flex-direction:column;gap:.5rem;padding:0 1rem}
+.mod-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem 1.1rem;display:flex;align-items:center;gap:.9rem;cursor:pointer;transition:border-color .2s,background .2s;position:relative;overflow:hidden}
+.mod-card:active{background:var(--surface2)}
+.mod-card.done{border-color:rgba(29,158,117,.4)}
+.mod-card.locked{opacity:.5;pointer-events:none}
+.mod-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.25rem;flex-shrink:0}
+.mod-icon.gold{background:rgba(201,149,42,.15)}
+.mod-icon.green{background:rgba(29,158,117,.15)}
+.mod-icon.blue{background:rgba(59,130,246,.12)}
+.mod-icon.purple{background:rgba(139,92,246,.12)}
+.mod-card-info{flex:1;min-width:0}
+.mod-card-title{font-family:'Syne',sans-serif;font-size:.9rem;font-weight:600;color:var(--text);line-height:1.2}
+.mod-card-sub{font-size:.73rem;color:var(--muted);margin-top:.2rem}
+.mod-check{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.65rem;color:transparent;transition:all .2s}
+.mod-card.done .mod-check{background:var(--green);border-color:var(--green);color:#fff}
+.badge-soon{font-size:.6rem;background:rgba(201,149,42,.2);color:var(--gold);padding:.15rem .5rem;border-radius:20px;font-weight:600;letter-spacing:.05em;text-transform:uppercase}
+
+/* LIME DESTACADO */
+.lime-card{margin:0 1rem .5rem;background:linear-gradient(135deg,rgba(201,149,42,.18),rgba(240,201,107,.08));border:1px solid rgba(201,149,42,.4);border-radius:16px;padding:1.1rem 1.2rem;cursor:pointer;transition:all .2s}
+.lime-card:active{opacity:.85}
+.lime-card-top{display:flex;align-items:center;gap:.75rem;margin-bottom:.5rem}
+.lime-card-icon{width:46px;height:46px;border-radius:12px;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0}
+.lime-card-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;color:var(--gold-l)}
+.lime-card-sub{font-size:.75rem;color:rgba(240,201,107,.7)}
+.lime-cta{font-size:.75rem;color:var(--gold);font-weight:600;display:flex;align-items:center;gap:.3rem}
+
+/* ── CRIPTO ACCORDION ── */
+.accordion{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin:0 1rem}
+.accordion-head{padding:.9rem 1rem;display:flex;align-items:center;gap:.9rem;cursor:pointer;transition:background .15s}
+.accordion-head:active{background:var(--surface2)}
+.acc-arrow{font-size:.7rem;color:var(--muted);transition:transform .25s;margin-left:auto}
+.accordion.open .acc-arrow{transform:rotate(180deg)}
+.accordion-body{max-height:0;overflow:hidden;transition:max-height .3s ease}
+.accordion.open .accordion-body{max-height:600px}
+.acc-lesson{padding:.75rem 1rem .75rem 3.5rem;border-top:1px solid var(--border);display:flex;align-items:center;gap:.75rem;cursor:pointer;transition:background .15s}
+.acc-lesson:active{background:var(--surface2)}
+.acc-lesson-title{font-size:.83rem;color:var(--text);flex:1}
+.acc-check{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.6rem;color:transparent;flex-shrink:0}
+.acc-lesson.done .acc-check{background:var(--green);border-color:var(--green);color:#fff}
+
+/* ── CANALES ── */
+.canal-list{display:flex;flex-direction:column;gap:.5rem;padding:0 1rem}
+.canal-item{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem 1.1rem;display:flex;align-items:center;gap:.9rem;cursor:pointer;transition:all .15s;text-decoration:none;color:inherit}
+.canal-item:active{background:var(--surface2)}
+.canal-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+.canal-name{font-family:'Syne',sans-serif;font-size:.9rem;font-weight:600}
+.canal-desc{font-size:.73rem;color:var(--muted);margin-top:.1rem}
+.canal-arrow{color:var(--muted);margin-left:auto;font-size:.9rem}
+
+/* ── PERFIL ── */
+.profile-hero{display:flex;flex-direction:column;align-items:center;padding:1.5rem 1rem 1rem;gap:.5rem}
+.profile-avatar-big{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-l));display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:2rem;color:#06080a}
+.profile-name{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700}
+.profile-role{font-size:.75rem;color:var(--muted)}
+.profile-form{padding:0 1rem;display:flex;flex-direction:column;gap:.75rem}
+.form-group label{font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:.3rem}
+.form-group input{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.75rem 1rem;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.9rem;outline:none;transition:border-color .2s}
+.form-group input:focus{border-color:var(--gold)}
+.btn-save{width:100%;background:var(--gold);border:none;border-radius:10px;padding:.85rem;font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700;color:#06080a;cursor:pointer;margin-top:.25rem;letter-spacing:.05em}
+.divider{height:1px;background:var(--border);margin:1rem}
+
+/* PROGRESS */
+.prog-section{padding:0 1rem}
+.prog-title{font-family:'Syne',sans-serif;font-size:.65rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:.75rem}
+.prog-bar-wrap{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem 1.1rem}
+.prog-bar-label{display:flex;justify-content:space-between;font-size:.75rem;color:var(--muted);margin-bottom:.6rem}
+.prog-bar-label strong{color:var(--text)}
+.prog-bar-track{height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+.prog-bar-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-l));border-radius:3px;transition:width .5s ease}
+.prog-items{display:flex;flex-direction:column;gap:.4rem;margin-top:.75rem}
+.prog-item{display:flex;align-items:center;gap:.6rem;font-size:.8rem}
+.prog-dot{width:10px;height:10px;border-radius:50%;border:1.5px solid var(--border);flex-shrink:0}
+.prog-dot.done{background:var(--green);border-color:var(--green)}
+.prog-item-label{color:var(--muted)}
+.prog-item.done .prog-item-label{color:var(--text)}
+
+.btn-7dias{width:100%;background:rgba(29,158,117,.15);border:1px solid rgba(29,158,117,.4);border-radius:10px;padding:.85rem;font-family:'Syne',sans-serif;font-size:.85rem;font-weight:600;color:var(--green);cursor:pointer;letter-spacing:.03em;margin-top:.25rem}
+.btn-logout{width:100%;background:rgba(224,82,82,.1);border:1px solid rgba(224,82,82,.3);border-radius:10px;padding:.85rem;font-family:'Syne',sans-serif;font-size:.85rem;font-weight:600;color:var(--danger);cursor:pointer;margin-top:.5rem;letter-spacing:.03em}
+
+/* ── BOTTOM NAV ── */
+#bottom-nav{position:absolute;bottom:0;left:0;right:0;background:rgba(6,8,10,.95);backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;padding:.6rem 0 calc(.6rem + env(safe-area-inset-bottom));z-index:50}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:.25rem;cursor:pointer;padding:.4rem 0;border:none;background:none;color:var(--muted);transition:color .2s;font-family:'DM Sans',sans-serif}
+.nav-btn.active{color:var(--gold)}
+.nav-btn svg{width:22px;height:22px;stroke-width:1.8}
+.nav-btn span{font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;font-weight:500}
+
+/* ── MODULE VIEWER ── */
+#viewer{position:absolute;inset:0;background:var(--bg);z-index:200;display:none;flex-direction:column}
+#viewer.open{display:flex}
+.viewer-bar{padding:1rem 1rem .75rem;display:flex;align-items:center;gap:.75rem;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0}
+.viewer-back{background:none;border:1px solid var(--border);border-radius:8px;padding:.4rem .75rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:.8rem;cursor:pointer;display:flex;align-items:center;gap:.3rem;flex-shrink:0}
+.viewer-title{font-family:'Syne',sans-serif;font-size:.85rem;font-weight:600;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.viewer-done-btn{background:rgba(29,158,117,.15);border:1px solid rgba(29,158,117,.4);border-radius:8px;padding:.4rem .8rem;color:var(--green);font-size:.75rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;flex-shrink:0;white-space:nowrap}
+.viewer-done-btn.marked{background:rgba(29,158,117,.3)}
+#viewer-content{flex:1;display:flex;flex-direction:column;overflow:hidden}
+#viewer-iframe{width:100%;height:100%;border:none;background:#fff}
+#viewer-inline{flex:1;overflow-y:auto;padding:1.25rem;display:none}
+#viewer-inline::-webkit-scrollbar{display:none}
+.inline-video-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:1rem}
+.inline-video-wrap{position:relative;padding-bottom:56.25%;height:0;background:#000}
+.inline-video-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:none}
+.inline-video-info{padding:.9rem 1rem}
+.inline-video-title{font-family:'Syne',sans-serif;font-size:.9rem;font-weight:600;margin-bottom:.3rem}
+.inline-video-desc{font-size:.78rem;color:var(--muted);line-height:1.5}
+
+/* CRIPTO LESSON VIEWER */
+#cripto-lesson-view{flex:1;overflow-y:auto;padding:1.25rem;display:none}
+#cripto-lesson-view::-webkit-scrollbar{display:none}
+.cl-resource{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.9rem 1rem;margin-bottom:.75rem;cursor:pointer;display:flex;align-items:center;gap:.75rem;transition:all .15s}
+.cl-resource:active{background:var(--surface2)}
+.cl-resource-icon{width:36px;height:36px;border-radius:8px;background:rgba(201,149,42,.15);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.cl-resource-title{font-size:.85rem;font-weight:500;color:var(--text)}
+.cl-resource-type{font-size:.7rem;color:var(--muted);margin-top:.1rem}
+.cl-video-embed{position:relative;padding-bottom:56.25%;height:0;background:#000;border-radius:12px;overflow:hidden;margin-bottom:.75rem}
+.cl-video-embed iframe{position:absolute;inset:0;width:100%;height:100%;border:none}
+.cl-drive-btn{display:flex;align-items:center;gap:.6rem;background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.3);border-radius:10px;padding:.75rem 1rem;cursor:pointer;text-decoration:none;color:var(--text);margin-bottom:.6rem;transition:all .15s}
+.cl-drive-btn:active{background:rgba(59,130,246,.2)}
+.cl-drive-btn span{font-size:.82rem}
+.pending-badge{display:inline-block;background:rgba(107,122,141,.15);border:1px solid var(--border);border-radius:6px;padding:.2rem .6rem;font-size:.7rem;color:var(--muted)}
+
+/* TABS */
+.tab-pane{display:none}
+.tab-pane.active{display:block}
+
+/* SCROLL TOP SPACER */
+.scroll-top{height:.75rem}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-logo">AUREX</div>
+  <div class="login-tagline">Riqueza en Expansión</div>
+  <div class="login-card">
+    <div>
+      <label>Usuario</label>
+      <input type="text" id="login-user" placeholder="aurexdigital" autocomplete="username">
+    </div>
+    <div>
+      <label>Contraseña</label>
+      <input type="password" id="login-pass" placeholder="••••••••••" autocomplete="current-password">
+    </div>
+    <div class="login-error" id="login-error">Usuario o contraseña incorrectos</div>
+    <button class="btn-login" onclick="doLogin()">Ingresar →</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="root" style="display:none">
+
+  <!-- TOP BAR -->
+  <div id="topbar">
+    <div class="topbar-avatar" id="top-avatar" onclick="switchTab('perfil')">A</div>
+    <div class="topbar-badge">● TU ECOSISTEMA DIGITAL</div>
+    <div class="topbar-welcome">Bienvenido a</div>
+    <div class="topbar-brand">AUREX</div>
+    <div class="topbar-sub">Todo lo que necesitas para desarrollar tu negocio digital, aprender, crecer y generar resultados reales — en un solo lugar.</div>
+    <div class="topbar-quote">"La libertad financiera no es un destino — es el resultado de decisiones constantes."<br><span>— Ale Torres · AUREX</span></div>
+  </div>
+
+  <!-- MAIN -->
+  <div id="main">
+
+    <!-- HOME TAB -->
+    <div class="tab-pane active" id="tab-inicio">
+      <div class="scroll-top"></div>
+
+      <div class="sec-title">Inicio</div>
+      <div class="card-grid">
+        <div class="mod-card" id="mc-bienvenida" onclick="openModule('bienvenida')">
+          <div class="mod-icon gold">🌟</div>
+          <div class="mod-card-info">
+            <div class="mod-card-title">Bienvenida a los Negocios Digitales</div>
+            <div class="mod-card-sub">Empieza aquí tu camino</div>
+          </div>
+          <div class="mod-check" id="chk-bienvenida">✓</div>
+        </div>
+        <div class="mod-card" id="mc-negocio" onclick="openModule('negocio')">
+          <div class="mod-icon gold">💡</div>
+          <div class="mod-card-info">
+            <div class="mod-card-title">¿Qué es un Negocio Digital?</div>
+            <div class="mod-card-sub">Fundamentos del ecosistema</div>
+          </div>
+          <div class="mod-check" id="chk-negocio">✓</div>
+        </div>
+        <div class="mod-card" id="mc-7dias" onclick="openModule('7dias')">
+          <div class="mod-icon green">🚀</div>
+          <div class="mod-card-info">
+            <div class="mod-card-title">Tus Primeros Resultados en 7 Días</div>
+            <div class="mod-card-sub">Plan de acción inmediata</div>
+          </div>
+          <div class="mod-check" id="chk-7dias">✓</div>
+        </div>
+        <div class="lime-card" onclick="openLime()" style="margin:0;border-radius:14px">
+          <div class="lime-card-top">
+            <div class="lime-card-icon">🍋</div>
+            <div>
+              <div class="lime-card-title">Cómo Iniciar en Lime Company</div>
+              <div class="lime-card-sub">4 videos de configuración paso a paso</div>
+            </div>
+          </div>
+          <div class="lime-cta">▶ Comenzar ahora</div>
+        </div>
+      </div>
+
+      <div style="height:1.25rem"></div>
+      <div class="sec-title" style="font-size:.8rem;color:var(--gold);letter-spacing:.2em">ACADEMIA</div>
+      <div style="padding:0 1rem">
+        <div class="accordion" id="cripto-acc">
+          <div class="accordion-head" onclick="toggleAcc()">
+            <div class="mod-icon blue" style="width:42px;height:42px;border-radius:10px;flex-shrink:0">₿</div>
+            <div class="mod-card-info">
+              <div class="mod-card-title" style="font-family:'Syne',sans-serif;font-size:.9rem;font-weight:600">Módulo Cripto</div>
+              <div class="mod-card-sub">6 lecciones · Educación financiera</div>
+            </div>
+            <div class="acc-arrow">▼</div>
+          </div>
+          <div class="accordion-body">
+            <div class="acc-lesson" id="al-cripto1" onclick="openCriptoLesson(0)">
+              <div class="acc-lesson-title">1. ¿Qué son las criptomonedas?</div>
+              <div class="acc-check" id="achk-0">✓</div>
+            </div>
+            <div class="acc-lesson" id="al-cripto2" onclick="openCriptoLesson(1)">
+              <div class="acc-lesson-title">2. Exchange (Binance)</div>
+              <div class="acc-check" id="achk-1">✓</div>
+            </div>
+            <div class="acc-lesson" id="al-cripto3" onclick="openCriptoLesson(2)">
+              <div class="acc-lesson-title">3. Criptomonedas Claras</div>
+              <div class="acc-check" id="achk-2">✓</div>
+            </div>
+            <div class="acc-lesson" id="al-cripto4" onclick="openCriptoLesson(3)">
+              <div class="acc-lesson-title">4. Tipos de Billeteras</div>
+              <div class="acc-check" id="achk-3">✓</div>
+            </div>
+            <div class="acc-lesson" id="al-cripto5" onclick="openCriptoLesson(4)">
+              <div class="acc-lesson-title">5. Blindaje Cripto — Seguridad</div>
+              <div class="acc-check" id="achk-4">✓</div>
+            </div>
+            <div class="acc-lesson" id="al-cripto6" onclick="openCriptoLesson(5)">
+              <div class="acc-lesson-title">6. Errores que Cuestan Dinero</div>
+              <div class="acc-check" id="achk-5">✓</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="height:.5rem"></div>
+      <div style="margin:0 1rem;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.9rem 1rem;font-size:.78rem;color:var(--muted);line-height:1.6">
+        Aquí encontrarás pasos y estrategias probadas para crecer dentro de la comunidad. Un sistema duplicable diseñado para que puedas compartir, sumar personas y expandir tu red colaborativa con intención y método.
+      </div>
+
+      <div style="height:1.25rem"></div>
+      <div style="padding:0 1rem">
+        <div class="accordion" id="networking-acc">
+          <div class="accordion-head" onclick="document.getElementById('networking-acc').classList.toggle('open')">
+            <div class="mod-icon green" style="width:42px;height:42px;border-radius:10px;flex-shrink:0">🤝</div>
+            <div class="mod-card-info">
+              <div class="mod-card-title" style="font-family:'Syne',sans-serif;font-size:.9rem;font-weight:600">Módulo Networking</div>
+              <div class="mod-card-sub">1 lección · Crecimiento de comunidad</div>
+            </div>
+            <div class="acc-arrow">▼</div>
+          </div>
+          <div class="accordion-body">
+            <div class="acc-lesson" onclick="openViewer('Prospección','https://prospeccion-weld.vercel.app/','net0')">
+              <div class="acc-lesson-title">1. Prospección</div>
+              <div class="acc-check" id="achk-net0" style="color:transparent">✓</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="height:1.25rem"></div>
+      <div class="sec-title">Próximamente</div>
+      <div class="card-grid">
+        <div class="mod-card locked">
+          <div class="mod-icon purple">📣</div>
+          <div class="mod-card-info">
+            <div class="mod-card-title">Marketing Digital</div>
+            <div class="mod-card-sub"><span class="badge-soon">Próximamente</span></div>
+          </div>
+        </div>
+        <div class="mod-card locked">
+          <div class="mod-icon blue">📈</div>
+          <div class="mod-card-info">
+            <div class="mod-card-title">Trading</div>
+            <div class="mod-card-sub"><span class="badge-soon">Próximamente</span></div>
+          </div>
+        </div>
+      </div>
+      <div style="height:1rem"></div>
+    </div>
+
+    <!-- CANALES TAB -->
+    <div class="tab-pane" id="tab-canales">
+      <div class="scroll-top"></div>
+      <div class="sec-title">Canales y Plataformas</div>
+      <div class="canal-list">
+        <div class="canal-item" onclick="openExternal('https://majesticlime.com/')">
+          <div class="canal-icon" style="background:rgba(240,201,107,.12)">🍋</div>
+          <div>
+            <div class="canal-name">Lime Company</div>
+            <div class="canal-desc">Plataforma oficial del negocio</div>
+          </div>
+          <span class="canal-arrow">→</span>
+        </div>
+        <div class="canal-item" onclick="openExternal('https://whatsapp.com/channel/0029VbCJVGF35fLrF45hx31y')">
+          <div class="canal-icon" style="background:rgba(37,211,102,.12)">💬</div>
+          <div>
+            <div class="canal-name">Canal WhatsApp</div>
+            <div class="canal-desc">Novedades y actualizaciones AUREX</div>
+          </div>
+          <span class="canal-arrow">→</span>
+        </div>
+        <div class="canal-item" onclick="openExternal('https://t.me/+qIrOWBBaQxE0MjYx')">
+          <div class="canal-icon" style="background:rgba(36,161,222,.12)">✈️</div>
+          <div>
+            <div class="canal-name">Canal Telegram</div>
+            <div class="canal-desc">Comunidad y alertas en tiempo real</div>
+          </div>
+          <span class="canal-arrow">→</span>
+        </div>
+        <div class="canal-item" onclick="openExternal('https://apps.apple.com/us/app/spaces-follow-businesses/id1099748482')">
+          <div class="canal-icon" style="background:rgba(201,149,42,.12)">🍎</div>
+          <div>
+            <div class="canal-name">App Space — iOS</div>
+            <div class="canal-desc">Descargar en App Store</div>
+          </div>
+          <span class="canal-arrow">→</span>
+        </div>
+        <div class="canal-item" onclick="openExternal('https://play.google.com/store/apps/details?id=com.wix.android')">
+          <div class="canal-icon" style="background:rgba(52,168,83,.12)">▶</div>
+          <div>
+            <div class="canal-name">App Space — Android</div>
+            <div class="canal-desc">Descargar en Google Play</div>
+          </div>
+          <span class="canal-arrow">→</span>
+        </div>
+      </div>
+      <div style="height:1rem"></div>
+    </div>
+
+    <!-- PERFIL TAB -->
+    <div class="tab-pane" id="tab-perfil">
+      <div class="scroll-top"></div>
+      <div class="profile-hero">
+        <div class="profile-avatar-big" id="profile-avatar-big">A</div>
+        <div class="profile-name" id="profile-name-display">Ale Torres</div>
+        <div class="profile-role">Líder AUREX · @aletorreslatam</div>
+      </div>
+      <div class="profile-form">
+        <div class="form-group">
+          <label>Nombre</label>
+          <input type="text" id="pf-nombre" placeholder="Tu nombre">
+        </div>
+        <div class="form-group">
+          <label>Teléfono</label>
+          <input type="tel" id="pf-tel" placeholder="+52 000 000 0000">
+        </div>
+        <div class="form-group">
+          <label>Correo</label>
+          <input type="email" id="pf-email" placeholder="tu@correo.com">
+        </div>
+        <button class="btn-save" onclick="saveProfile()">Guardar datos</button>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="prog-section">
+        <div class="prog-title">Mi Progreso</div>
+        <div class="prog-bar-wrap">
+          <div class="prog-bar-label"><strong id="prog-count">0 / 9</strong><span id="prog-pct">0%</span></div>
+          <div class="prog-bar-track"><div class="prog-bar-fill" id="prog-fill" style="width:0%"></div></div>
+          <div class="prog-items" id="prog-items"></div>
+        </div>
+        <div style="height:.75rem"></div>
+        <button class="btn-7dias" onclick="openModule('7dias')">📅 Mi plan de 7 días</button>
+        <button class="btn-logout" onclick="doLogout()">Cerrar sesión</button>
+      </div>
+      <div style="height:1rem"></div>
+    </div>
+
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <nav id="bottom-nav">
+    <button class="nav-btn active" id="nav-inicio" onclick="switchTab('inicio')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span>Inicio</span>
+    </button>
+    <button class="nav-btn" id="nav-canales" onclick="switchTab('canales')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8a19.79 19.79 0 01-3.07-8.68A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+      <span>Canales</span>
+    </button>
+    <button class="nav-btn" id="nav-perfil" onclick="switchTab('perfil')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span>Perfil</span>
+    </button>
+  </nav>
+
+  <!-- VIEWER OVERLAY -->
+  <div id="viewer">
+    <div class="viewer-bar">
+      <button class="viewer-back" onclick="closeViewer()">← Volver</button>
+      <div class="viewer-title" id="viewer-title">Módulo</div>
+      <button class="viewer-done-btn" id="viewer-done" onclick="markCurrentDone()">✓ Completar</button>
+    </div>
+    <div id="viewer-content">
+      <iframe id="viewer-iframe" allow="fullscreen" sandbox="allow-scripts allow-same-origin allow-popups allow-forms" src="about:blank"></iframe>
+      <div id="viewer-inline"><!-- inline youtube content here --></div>
+      <div id="cripto-lesson-view"><!-- cripto lesson resources here --></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const USERS={aurexdigital:['Riqueza2026','Lider2026']};
+const PHRASES=[
+  'El sistema que construyes hoy te paga mientras duermes mañana. No es suerte — es arquitectura.',
+  'Liderar no es dar órdenes. Es demostrar que el camino existe porque tú ya lo caminaste.',
+  'La decisión de cambiar tu economía no llega cuando estás lista. Llega cuando decides estarlo.',
+  'La libertad financiera no se hereda ni se regala. Se diseña, se trabaja y se replica.',
+  'Cada resultado real en tu equipo vale más que mil posts de motivación. La prueba mueve.',
+  'No esperes condiciones perfectas. La expansión ocurre exactamente en la incomodidad.',
+  'Un negocio digital bien construido no necesita que estés presente para generar. Eso es riqueza real.'
+];
+const MODULES={
+  bienvenida:{title:'Bienvenida a los Negocios Digitales',url:'https://bienvenidanegociosdigitales.vercel.app',key:'bienvenida'},
+  negocio:{title:'¿Qué es un Negocio Digital?',url:'https://guiadeinicioaurexlime-qolu.vercel.app',key:'negocio'},
+  '7dias':{title:'Tus Primeros Resultados en 7 Días',url:'https://guiadeinicio.vercel.app/',key:'7dias'}
+};
+const CRIPTO_LESSONS=[
+  {title:'¿Qué son las criptomonedas?',key:'cripto0',resources:[
+    {type:'video',label:'Video introductorio',yt:'Xsud8d1ITyQ'},
+    {type:'page',label:'Página de apoyo',url:'https://aurex-cripto.vercel.app',icon:'📄'},
+    {type:'page',label:'Diccionario Cripto',url:'https://criptodiccionario.vercel.app',icon:'📖'}
+  ]},
+  {title:'Exchange (Binance)',key:'cripto1',resources:[
+    {type:'pending',label:'Video: Registro en Binance'},
+    {type:'pending',label:'Video: Envío de USDT'},
+    {type:'drive',label:'Checklist Binance',url:'https://drive.google.com/file/d/1rt4XNYrMt0OsOKoJcy74EcH9VCLrvP3X/view'},
+    {type:'drive',label:'Checklist Envío USDT',url:'https://drive.google.com/file/d/19Or3XFo1ZUt5sJauIYEE2YZ-qLZ9895u/view'}
+  ]},
+  {title:'Criptomonedas Claras',key:'cripto2',resources:[
+    {type:'video',label:'¿Qué es Bitcoin?',yt:'zPiyvDBXoWg'},
+    {type:'page',label:'Criptos más importantes',url:'https://cripto-monedastop.vercel.app',icon:'🏆'}
+  ]},
+  {title:'Tipos de Billeteras',key:'cripto3',resources:[
+    {type:'page',label:'Guía de Wallets',url:'https://criptowallets.vercel.app',icon:'👛'}
+  ]},
+  {title:'Blindaje Cripto — Seguridad',key:'cripto4',resources:[
+    {type:'page',label:'Página de seguridad',url:'https://aurex-criptosecurity.vercel.app',icon:'🔒'},
+    {type:'pending',label:'Video: Google Authenticator'}
+  ]},
+  {title:'Errores que Cuestan Dinero',key:'cripto5',resources:[
+    {type:'page',label:'Guía de errores comunes',url:'https://criptoerrores.vercel.app',icon:'⚠️'}
+  ]}
+];
+const LIME_VIDEOS=[
+  {title:'Registro de la cuenta',desc:'Cómo crear y configurar tu cuenta en Lime Company.',yt:'mv8QcVUw6D0'},
+  {title:'Agregar saldo desde wallet',desc:'Cómo depositar USDT desde tu wallet a Lime.',yt:'uumB2ibTAXs'},
+  {title:'Activar Ulime',desc:'Pasos para activar tu plan Ulime correctamente.',yt:'5_nG_zirlDY'},
+  {title:'Activar Kaleidoscope',desc:'Cómo activar la herramienta Kaleidoscope.',yt:'uaBSaiHF-mM'}
+];
+const PROG_ITEMS=[
+  {label:'Bienvenida',key:'bienvenida'},
+  {label:'Negocio Digital',key:'negocio'},
+  {label:'Plan 7 Días',key:'7dias'},
+  {label:'Lime Company',key:'lime'},
+  {label:'Cripto 1: ¿Qué son?',key:'cripto0'},
+  {label:'Cripto 2: Exchange',key:'cripto1'},
+  {label:'Cripto 3: Claras',key:'cripto2'},
+  {label:'Cripto 4: Billeteras',key:'cripto3'},
+  {label:'Cripto 5: Seguridad',key:'cripto4'},
+  {label:'Cripto 6: Errores',key:'cripto5'}
+];
+
+let currentModKey=null;
+
+function LS(k,v){if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}
+function done(k){return LS('done_'+k)==='1'}
+function setDone(k){LS('done_'+k,'1')}
+
+function doLogin(){
+  const u=document.getElementById('login-user').value.trim();
+  const p=document.getElementById('login-pass').value.trim();
+  const err=document.getElementById('login-error');
+  if(USERS[u]&&USERS[u].includes(p)){
+    LS('logged','1');err.style.display='none';
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('root').style.display='flex';
+    initApp();
+  }else{err.style.display='block'}
+}
+document.getElementById('login-pass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()});
+
+function doLogout(){LS('logged','0');location.reload()}
+
+function initApp(){
+  // phrase
+  const d=new Date().getDay();
+  const phEl=document.getElementById('phrase-el');
+  phEl.innerHTML='<strong>"</strong> '+PHRASES[d]+' <strong>"</strong>';
+  // profile
+  const n=LS('pf_nombre')||'';
+  if(n){
+    document.getElementById('greet-name').textContent=n.split(' ')[0];
+    document.getElementById('profile-name-display').textContent=n;
+    document.getElementById('top-avatar').textContent=n[0].toUpperCase();
+    document.getElementById('profile-avatar-big').textContent=n[0].toUpperCase();
+  }
+  document.getElementById('pf-nombre').value=LS('pf_nombre')||'';
+  document.getElementById('pf-tel').value=LS('pf_tel')||'';
+  document.getElementById('pf-email').value=LS('pf_email')||'';
+  refreshChecks();
+  renderProgress();
+}
+
+function saveProfile(){
+  const n=document.getElementById('pf-nombre').value.trim();
+  const t=document.getElementById('pf-tel').value.trim();
+  const e=document.getElementById('pf-email').value.trim();
+  LS('pf_nombre',n);LS('pf_tel',t);LS('pf_email',e);
+  if(n){
+    document.getElementById('greet-name').textContent=n.split(' ')[0];
+    document.getElementById('profile-name-display').textContent=n;
+    document.getElementById('top-avatar').textContent=n[0].toUpperCase();
+    document.getElementById('profile-avatar-big').textContent=n[0].toUpperCase();
+  }
+  const b=document.querySelector('.btn-save');
+  b.textContent='¡Guardado ✓';setTimeout(()=>b.textContent='Guardar datos',1500);
+}
+
+function refreshChecks(){
+  ['bienvenida','negocio','7dias'].forEach(k=>{
+    const c=document.getElementById('mc-'+k);
+    const ch=document.getElementById('chk-'+k);
+    if(done(k)){c.classList.add('done');ch.style.color='#fff'}
+    else{c.classList.remove('done');ch.style.color='transparent'}
+  });
+  for(let i=0;i<6;i++){
+    const al=document.getElementById('al-cripto'+(i+1));
+    const ch=document.getElementById('achk-'+i);
+    if(done('cripto'+i)){al.classList.add('done');ch.style.color='#fff'}
+    else{al.classList.remove('done');ch.style.color='transparent'}
+  }
+}
+
+function renderProgress(){
+  const el=document.getElementById('prog-items');
+  let count=0;
+  el.innerHTML=PROG_ITEMS.map(p=>{
+    const ok=done(p.key);if(ok)count++;
+    return`<div class="prog-item${ok?' done':''}"><div class="prog-dot${ok?' done':''}"></div><span class="prog-item-label">${p.label}</span></div>`;
+  }).join('');
+  const pct=Math.round(count/PROG_ITEMS.length*100);
+  document.getElementById('prog-count').textContent=count+' / '+PROG_ITEMS.length;
+  document.getElementById('prog-pct').textContent=pct+'%';
+  document.getElementById('prog-fill').style.width=pct+'%';
+}
+
+function switchTab(t){
+  ['inicio','canales','perfil'].forEach(x=>{
+    document.getElementById('tab-'+x).classList.toggle('active',x===t);
+    document.getElementById('nav-'+x).classList.toggle('active',x===t);
+  });
+  if(t==='perfil')renderProgress();
+}
+
+function toggleAcc(){
+  document.getElementById('cripto-acc').classList.toggle('open');
+}
+
+function openExternal(url){window.open(url,'_blank')}
+
+function openModule(key){
+  const m=MODULES[key];
+  currentModKey=m.key;
+  const vd=document.getElementById('viewer-done');
+  vd.textContent=done(m.key)?'✓ Completado':'✓ Completar';
+  vd.classList.toggle('marked',done(m.key));
+  document.getElementById('viewer-title').textContent=m.title;
+  document.getElementById('viewer-iframe').src=m.url;
+  document.getElementById('viewer-iframe').style.display='block';
+  document.getElementById('viewer-inline').style.display='none';
+  document.getElementById('cripto-lesson-view').style.display='none';
+  document.getElementById('viewer').classList.add('open');
+}
+
+function openViewer(title,url,key){
+  currentModKey=key;
+  const vd=document.getElementById('viewer-done');
+  vd.textContent=done(key)?'✓ Completado':'✓ Completar';
+  vd.classList.toggle('marked',done(key));
+  document.getElementById('viewer-title').textContent=title;
+  document.getElementById('viewer-iframe').src=url;
+  document.getElementById('viewer-iframe').style.display='block';
+  document.getElementById('viewer-inline').style.display='none';
+  document.getElementById('cripto-lesson-view').style.display='none';
+  document.getElementById('viewer').classList.add('open');
+}
+
+function openLime(){
+  currentModKey='lime';
+  const vd=document.getElementById('viewer-done');
+  vd.textContent=done('lime')?'✓ Completado':'✓ Completar';
+  vd.classList.toggle('marked',done('lime'));
+  document.getElementById('viewer-title').textContent='Cómo Iniciar en Lime Company';
+  document.getElementById('viewer-iframe').style.display='none';
+  document.getElementById('cripto-lesson-view').style.display='none';
+  const il=document.getElementById('viewer-inline');
+  il.style.display='block';
+  il.innerHTML=LIME_VIDEOS.map(v=>`
+    <div class="inline-video-card">
+      <div class="inline-video-wrap">
+        <iframe src="https://www.youtube.com/embed/${v.yt}?rel=0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture;fullscreen" allowfullscreen></iframe>
+      </div>
+      <div class="inline-video-info">
+        <div class="inline-video-title">${v.title}</div>
+        <div class="inline-video-desc">${v.desc}</div>
+      </div>
+    </div>`).join('');
+  document.getElementById('viewer').classList.add('open');
+}
+
+function openCriptoLesson(i){
+  const lesson=CRIPTO_LESSONS[i];
+  currentModKey=lesson.key;
+  const vd=document.getElementById('viewer-done');
+  vd.textContent=done(lesson.key)?'✓ Completado':'✓ Completar';
+  vd.classList.toggle('marked',done(lesson.key));
+  document.getElementById('viewer-title').textContent=lesson.title;
+  document.getElementById('viewer-iframe').style.display='none';
+  document.getElementById('viewer-inline').style.display='none';
+  const cv=document.getElementById('cripto-lesson-view');
+  cv.style.display='block';
+  cv.innerHTML=lesson.resources.map(r=>{
+    if(r.type==='video') return`<div class="cl-video-embed"><iframe src="https://www.youtube.com/embed/${r.yt}?rel=0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture;fullscreen" allowfullscreen></iframe></div><div style="font-size:.75rem;color:var(--muted);margin-bottom:1rem;padding-left:.25rem">${r.label}</div>`;
+    if(r.type==='page') return`<div class="cl-resource" onclick="openExternal('${r.url}')"><div class="cl-resource-icon">${r.icon}</div><div><div class="cl-resource-title">${r.label}</div><div class="cl-resource-type">Abrir página →</div></div></div>`;
+    if(r.type==='drive') return`<a class="cl-drive-btn" href="${r.url}" target="_blank"><span>📁</span><span>${r.label} — Google Drive →</span></a>`;
+    if(r.type==='pending') return`<div class="cl-resource" style="pointer-events:none;opacity:.5"><div class="cl-resource-icon">🎬</div><div><div class="cl-resource-title">${r.label}</div><div class="cl-resource-type"><span class="pending-badge">Próximamente</span></div></div></div>`;
+    return'';
+  }).join('');
+  document.getElementById('viewer').classList.add('open');
+}
+
+function markCurrentDone(){
+  if(!currentModKey)return;
+  setDone(currentModKey);
+  const vd=document.getElementById('viewer-done');
+  vd.textContent='✓ Completado';vd.classList.add('marked');
+  refreshChecks();renderProgress();
+}
+
+function closeViewer(){
+  document.getElementById('viewer').classList.remove('open');
+  document.getElementById('viewer-iframe').src='about:blank';
+  currentModKey=null;
+}
+
+// Auto login check
+if(LS('logged')==='1'){
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('root').style.display='flex';
+  initApp();
+}
+</script>
+</body>
+</html>
