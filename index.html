@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AUREX — Cómo Prospectar</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold:     #D4A843;
+    --gold-dim: #8A6B24;
+    --bg:       #0D0D0D;
+    --card:     #161616;
+    --card2:    #1C1C1C;
+    --border:   #2A2A2A;
+    --white:    #F0EDE8;
+    --muted:    #888888;
+
+    /* Fases */
+    --f1:     #D4A843;   /* amarillo gold  */
+    --f1-bg:  #1F1A0E;
+    --f1-b:   rgba(212,168,67,.25);
+
+    --f2:     #4BAF7D;   /* verde          */
+    --f2-bg:  #0E1A14;
+    --f2-b:   rgba(75,175,125,.25);
+
+    --f3:     #5B9BD5;   /* azul           */
+    --f3-bg:  #0E1420;
+    --f3-b:   rgba(91,155,213,.25);
+
+    --f4:     #A97BD4;   /* morado         */
+    --f4-bg:  #160E20;
+    --f4-b:   rgba(169,123,212,.25);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    line-height: 1.65;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: #000;
+    padding: 44px 24px 36px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content:'';
+    position:absolute; top:-60px; left:50%; transform:translateX(-50%);
+    width:320px; height:320px;
+    background: radial-gradient(circle, rgba(212,168,67,.12) 0%, transparent 70%);
+    pointer-events:none;
+  }
+  .header-brand {
+    font-family:'Syne',sans-serif;
+    font-size:11px; font-weight:600;
+    letter-spacing:6px; color:var(--gold);
+    text-transform:uppercase; margin-bottom:18px;
+  }
+  .header h1 {
+    font-family:'Syne',sans-serif;
+    font-size:30px; font-weight:800;
+    color:#fff; line-height:1.15; margin-bottom:12px;
+  }
+  .header h1 span { color:var(--gold); }
+  .header p { font-size:14px; color:var(--muted); font-weight:300; }
+
+  /* ── BLOQUE DE SECCIÓN ── */
+  .sec-label {
+    font-size:11px; font-weight:600;
+    letter-spacing:3px; text-transform:uppercase;
+    padding:28px 20px 6px;
+    color:var(--muted);
+  }
+  .sec-title {
+    font-family:'Syne',sans-serif;
+    font-size:22px; font-weight:800;
+    padding:0 20px 6px; color:var(--white);
+  }
+  .sec-intro {
+    font-size:14px; color:var(--muted);
+    padding:0 20px 20px; line-height:1.55;
+  }
+
+  /* ── SEPARADOR ── */
+  .sep { height:1px; background:var(--border); margin:8px 0; }
+  .sep-thick { height:6px; background:#111; margin:8px 0; }
+
+  /* ══════════════════════════════
+     TARJETAS DE FASE
+  ══════════════════════════════ */
+  .fases-wrap { padding:8px 16px 24px; display:flex; flex-direction:column; gap:10px; }
+
+  .fase-card {
+    border-radius:14px;
+    border:1px solid var(--border);
+    overflow:hidden;
+    position:relative;
+  }
+
+  .f1-card { background:var(--f1-bg); border-color:var(--f1-b); }
+  .f2-card { background:var(--f2-bg); border-color:var(--f2-b); }
+  .f3-card { background:var(--f3-bg); border-color:var(--f3-b); }
+  .f4-card { background:var(--f4-bg); border-color:var(--f4-b); }
+
+  .fase-top {
+    display:flex; align-items:center; gap:14px;
+    padding:16px 18px 14px;
+  }
+
+  .fase-num {
+    width:42px; height:42px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Syne',sans-serif; font-size:17px; font-weight:800;
+    flex-shrink:0;
+  }
+  .f1-card .fase-num { background:rgba(212,168,67,.18); color:var(--f1); }
+  .f2-card .fase-num { background:rgba(75,175,125,.18);  color:var(--f2); }
+  .f3-card .fase-num { background:rgba(91,155,213,.18);  color:var(--f3); }
+  .f4-card .fase-num { background:rgba(169,123,212,.18); color:var(--f4); }
+
+  .fase-info-title {
+    font-family:'Syne',sans-serif;
+    font-size:17px; font-weight:800; color:#fff;
+    margin-bottom:2px;
+  }
+  .fase-info-sub { font-size:12px; color:var(--muted); }
+
+  .fase-divider { height:1px; margin:0 18px; }
+  .f1-card .fase-divider { background:var(--f1-b); }
+  .f2-card .fase-divider { background:var(--f2-b); }
+  .f3-card .fase-divider { background:var(--f3-b); }
+  .f4-card .fase-divider { background:var(--f4-b); }
+
+  .fase-body { padding:14px 18px 18px; }
+
+  .fase-obj-label {
+    font-size:10px; font-weight:600; letter-spacing:2px;
+    text-transform:uppercase; margin-bottom:6px;
+  }
+  .f1-card .fase-obj-label { color:var(--f1); }
+  .f2-card .fase-obj-label { color:var(--f2); }
+  .f3-card .fase-obj-label { color:var(--f3); }
+  .f4-card .fase-obj-label { color:var(--f4); }
+
+  .fase-desc { font-size:14px; color:#C0BDB8; line-height:1.6; }
+  .fase-desc strong { color:#fff; }
+
+  .fase-arrow { text-align:center; font-size:18px; color:var(--border); padding:2px 0; }
+
+  /* ══════════════════════════════
+     CAJA DE TIPS (fondo card)
+  ══════════════════════════════ */
+  .tips-box {
+    margin:4px 16px 20px;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:20px 18px;
+  }
+  .tips-title {
+    font-family:'Syne',sans-serif;
+    font-size:13px; font-weight:800;
+    margin-bottom:16px;
+  }
+  .t-f1 { color:var(--f1); }
+  .t-f2 { color:var(--f2); }
+  .t-f3 { color:var(--f3); }
+  .t-f4 { color:var(--f4); }
+
+  .tip-row {
+    display:flex; align-items:flex-start; gap:12px;
+    margin-bottom:14px; padding-bottom:14px;
+    border-bottom:1px solid var(--border);
+  }
+  .tip-row:last-child { margin-bottom:0; padding-bottom:0; border-bottom:none; }
+
+  .tip-icon-wrap {
+    width:32px; height:32px; border-radius:8px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:15px; flex-shrink:0;
+  }
+  .ti-f1 { background:rgba(212,168,67,.12); }
+  .ti-f2 { background:rgba(75,175,125,.12); }
+  .ti-f3 { background:rgba(91,155,213,.12); }
+  .ti-f4 { background:rgba(169,123,212,.12); }
+
+  .tip-content strong {
+    display:block; font-size:14px; font-weight:600;
+    color:#fff; margin-bottom:2px;
+  }
+  .tip-content span { font-size:13px; color:var(--muted); }
+
+  /* ══════════════════════════════
+     INTRO EJEMPLOS
+  ══════════════════════════════ */
+  .ej-intro {
+    margin:0 16px 16px;
+    background:var(--card2);
+    border-radius:10px;
+    padding:13px 16px;
+    display:flex; gap:10px; align-items:center;
+    border:1px solid var(--border);
+  }
+  .ej-intro-icon { font-size:18px; flex-shrink:0; }
+  .ej-intro-text { font-size:14px; color:var(--muted); }
+  .ej-intro-text b { color:var(--white); }
+
+  /* ══════════════════════════════
+     TARJETAS DE EJEMPLO
+  ══════════════════════════════ */
+  .ej-card {
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:14px;
+    margin:0 16px 14px;
+    overflow:hidden;
+  }
+
+  .ej-bar {
+    display:flex; align-items:center; gap:10px;
+    padding:12px 16px;
+    background:var(--card2);
+    border-bottom:1px solid var(--border);
+  }
+
+  .badge {
+    font-size:10px; font-weight:700;
+    letter-spacing:1px; text-transform:uppercase;
+    padding:4px 10px; border-radius:20px;
+  }
+  .b-hot  { background:rgba(212,168,67,.15); color:var(--f1); border:1px solid rgba(212,168,67,.3); }
+  .b-wa   { background:rgba(75,175,125,.15); color:var(--f2); border:1px solid rgba(75,175,125,.3); }
+  .b-ig   { background:rgba(91,155,213,.15); color:var(--f3); border:1px solid rgba(91,155,213,.3); }
+  .b-obj  { background:rgba(169,123,212,.15); color:var(--f4); border:1px solid rgba(169,123,212,.3); }
+
+  .ej-bar-title { font-size:13px; font-weight:600; color:var(--white); }
+
+  .ej-body { padding:16px; }
+
+  .ver-label {
+    font-size:11px; font-weight:600; letter-spacing:1.5px;
+    text-transform:uppercase; color:var(--muted); margin-bottom:8px;
+  }
+
+  /* Burbuja estilo chat */
+  .burbuja {
+    background:#222;
+    border:1px solid #2E2E2E;
+    border-radius:4px 12px 12px 12px;
+    padding:14px 16px;
+    font-size:14px; color:#DDD;
+    line-height:1.65; white-space:pre-wrap;
+    margin-bottom:10px;
+    position:relative;
+  }
+
+  .copy-btn {
+    display:flex; align-items:center; justify-content:center;
+    gap:8px; width:100%;
+    background:var(--gold);
+    color:#000;
+    border:none; border-radius:8px;
+    padding:11px 16px;
+    font-family:'Syne',sans-serif;
+    font-size:13px; font-weight:800;
+    letter-spacing:.5px;
+    cursor:pointer;
+    margin-bottom:16px;
+    transition:opacity .2s, transform .1s;
+  }
+  .copy-btn:active { transform:scale(.98); opacity:.85; }
+  .copy-btn.ok { background:#4BAF7D; color:#fff; }
+
+  .ej-tips { border-top:1px solid var(--border); padding-top:14px; display:flex; flex-direction:column; gap:10px; }
+
+  .etip { display:flex; align-items:flex-start; gap:10px; }
+  .etip-dot { width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; flex-shrink:0; margin-top:1px; }
+  .dot-ok   { background:rgba(75,175,125,.15); color:var(--f2); }
+  .dot-no   { background:rgba(220,70,70,.15);  color:#E07070; }
+  .etip-text { font-size:13px; color:var(--muted); line-height:1.5; }
+  .etip-text b { color:var(--white); font-weight:600; }
+
+  /* ══════════════════════════════
+     ERRORES — tarjetas mejoradas
+  ══════════════════════════════ */
+  .errores-wrap { padding:0 16px 32px; display:flex; flex-direction:column; gap:10px; }
+
+  .err-card {
+    background:var(--card);
+    border:1px solid #2E1A1A;
+    border-radius:14px;
+    overflow:hidden;
+  }
+  .err-top {
+    background:#1C1010;
+    padding:13px 16px;
+    display:flex; align-items:flex-start; gap:10px;
+    border-bottom:1px solid #2E1A1A;
+  }
+  .err-x {
+    width:24px; height:24px; border-radius:50%;
+    background:#5C1A1A; color:#E07070;
+    display:flex; align-items:center; justify-content:center;
+    font-size:12px; font-weight:700; flex-shrink:0; margin-top:1px;
+  }
+  .err-mal-text { font-size:14px; color:#C07070; font-weight:500; line-height:1.5; }
+
+  .err-bottom {
+    padding:12px 16px;
+    display:flex; align-items:flex-start; gap:10px;
+  }
+  .err-check {
+    width:24px; height:24px; border-radius:50%;
+    background:rgba(75,175,125,.15); color:var(--f2);
+    display:flex; align-items:center; justify-content:center;
+    font-size:12px; flex-shrink:0; margin-top:1px;
+  }
+  .err-ok-text { font-size:14px; color:#C0BDB8; line-height:1.5; }
+
+  /* ══════════════════════════════
+     REGLAS DE ORO — grid 2 col
+  ══════════════════════════════ */
+  .reglas-grid {
+    padding:0 16px 40px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+  }
+
+  .regla-card {
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:18px 16px;
+    position:relative;
+    overflow:hidden;
+  }
+  .regla-card::before {
+    content:'';
+    position:absolute; top:0; left:0; right:0; height:3px;
+  }
+  .rg-1::before { background:var(--f1); }
+  .rg-2::before { background:var(--f2); }
+  .rg-3::before { background:var(--f3); }
+  .rg-4::before { background:var(--f4); }
+  .rg-5::before { background:var(--f1); }
+  .rg-6::before { background:var(--f3); }
+
+  .rg-num {
+    font-family:'Syne',sans-serif;
+    font-size:28px; font-weight:800;
+    line-height:1; margin-bottom:8px; opacity:.35;
+  }
+  .rg-1 .rg-num { color:var(--f1); }
+  .rg-2 .rg-num { color:var(--f2); }
+  .rg-3 .rg-num { color:var(--f3); }
+  .rg-4 .rg-num { color:var(--f4); }
+  .rg-5 .rg-num { color:var(--f1); }
+  .rg-6 .rg-num { color:var(--f3); }
+
+  .rg-title {
+    font-family:'Syne',sans-serif;
+    font-size:13px; font-weight:800; color:#fff; margin-bottom:6px;
+  }
+  .rg-text { font-size:12px; color:var(--muted); line-height:1.5; }
+
+  /* ── FOOTER ── */
+  .footer {
+    background:#000;
+    border-top:1px solid var(--border);
+    padding:28px 20px;
+    text-align:center;
+  }
+  .footer-brand {
+    font-family:'Syne',sans-serif;
+    font-size:20px; font-weight:800;
+    letter-spacing:7px; color:var(--gold); margin-bottom:6px;
+  }
+  .footer-sub { font-size:11px; color:#555; letter-spacing:1px; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-brand">AUREX · Sistema de Prospección</div>
+  <h1>Cómo <span>Prospectar</span><br>Paso a Paso</h1>
+  <p>Guía completa para empezar desde cero</p>
+</div>
+
+<!-- ══════════════════════════════
+  EL PROCESO — 4 FASES
+══════════════════════════════ -->
+<div class="sec-label">El proceso</div>
+<div class="sec-title">4 pasos. Sin saltar ninguno.</div>
+<div class="sec-intro">Cada paso tiene un propósito. Si saltas uno, el siguiente no funciona.</div>
+
+<div class="fases-wrap">
+
+  <div class="fase-card f1-card">
+    <div class="fase-top">
+      <div class="fase-num">1</div>
+      <div>
+        <div class="fase-info-title">Primer Contacto</div>
+        <div class="fase-info-sub">Generar confianza genuina</div>
+      </div>
+    </div>
+    <div class="fase-divider"></div>
+    <div class="fase-body">
+      <div class="fase-obj-label">Objetivo</div>
+      <div class="fase-desc">El objetivo <strong>NO es vender</strong>. Es iniciar una conversación real donde la persona sienta que la viste a ella, no que la elegiste al azar para un pitch.</div>
+    </div>
+  </div>
+
+  <div class="fase-arrow">↓</div>
+
+  <div class="fase-card f2-card">
+    <div class="fase-top">
+      <div class="fase-num">2</div>
+      <div>
+        <div class="fase-info-title">Calificación</div>
+        <div class="fase-info-sub">Descubrir si tiene perfil</div>
+      </div>
+    </div>
+    <div class="fase-divider"></div>
+    <div class="fase-body">
+      <div class="fase-obj-label">Objetivo</div>
+      <div class="fase-desc">Entender su realidad: ¿qué le duele? ¿qué sueña? ¿está abierta a algo diferente? Es una <strong>conversación natural</strong>, no un interrogatorio.</div>
+    </div>
+  </div>
+
+  <div class="fase-arrow">↓</div>
+
+  <div class="fase-card f3-card">
+    <div class="fase-top">
+      <div class="fase-num">3</div>
+      <div>
+        <div class="fase-info-title">Despertar</div>
+        <div class="fase-info-sub">Hacer que vea el problema</div>
+      </div>
+    </div>
+    <div class="fase-divider"></div>
+    <div class="fase-body">
+      <div class="fase-obj-label">Objetivo</div>
+      <div class="fase-desc"><strong>No explicas el negocio todavía.</strong> Conectas con su dolor usando sus propias palabras. Una historia — la tuya o la de tu equipo — hace que sienta que hay otra forma posible.</div>
+    </div>
+  </div>
+
+  <div class="fase-arrow">↓</div>
+
+  <div class="fase-card f4-card">
+    <div class="fase-top">
+      <div class="fase-num">4</div>
+      <div>
+        <div class="fase-info-title">Invitación al Zoom</div>
+        <div class="fase-info-sub">Llevarla a la sesión</div>
+      </div>
+    </div>
+    <div class="fase-divider"></div>
+    <div class="fase-body">
+      <div class="fase-obj-label">Objetivo</div>
+      <div class="fase-desc">Que confirme fecha y hora para una sesión de <strong>45 minutos</strong> donde puede ver todo, preguntar y decidir ella sola. Sin fecha confirmada, no hay invitación.</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="sep-thick"></div>
+
+<!-- ══════════════════════════════
+  FASE 1 — PRIMER CONTACTO
+══════════════════════════════ -->
+<div class="sec-label" style="color:var(--f1)">Fase 1</div>
+<div class="sec-title">Primer Contacto</div>
+<div class="sec-intro">Antes de ver los ejemplos, ten esto muy claro:</div>
+
+<div class="tips-box">
+  <div class="tips-title t-f1">✦ Lo que siempre debes recordar</div>
+
+  <div class="tip-row">
+    <div class="tip-icon-wrap ti-f1">💬</div>
+    <div class="tip-content">
+      <strong>Sé cálida, genuina y curiosa</strong>
+      <span>Habla como si le escribieras a una amiga. Nada de script frío o mensaje de ventas.</span>
+    </div>
+  </div>
+
+  <div class="tip-row">
+    <div class="tip-icon-wrap ti-f1">📏</div>
+    <div class="tip-content">
+      <strong>Mensajes cortos — máximo 3 líneas</strong>
+      <span>Si tu primer mensaje es muy largo, no lo leen. Ve al punto con calidez.</span>
+    </div>
+  </div>
+
+  <div class="tip-row">
+    <div class="tip-icon-wrap ti-f1">👂</div>
+    <div class="tip-content">
+      <strong>Tú escuchas el 80%, ellas hablan el 80%</strong>
+      <span>Tu trabajo en prospección es preguntar y escuchar, no explicar ni convencer.</span>
+    </div>
+  </div>
+
+  <div class="tip-row">
+    <div class="tip-icon-wrap ti-f1">🚫</div>
+    <div class="tip-content">
+      <strong>Cero negocio, producto o dinero aquí</strong>
+      <span>En este primer contacto, nada de eso. Primero la persona, luego la oportunidad.</span>
+    </div>
+  </div>
+
+  <div class="tip-row">
+    <div class="tip-icon-wrap ti-f1">🎯</div>
+    <div class="tip-content">
+      <strong>Personaliza cada mensaje</strong>
+      <span>Un detalle específico de esa persona vale más que 50 mensajes iguales mandados en masa.</span>
+    </div>
+  </div>
+</div>
+
+<div class="ej-intro">
+  <div class="ej-intro-icon">📌</div>
+  <div class="ej-intro-text"><b>Ejemplos reales para copiar y pegar</b> — elige el canal que uses con esa persona:</div>
+</div>
+
+<!-- CONTACTOS CALIENTES -->
+<div class="ej-card">
+  <div class="ej-bar">
+    <span class="badge b-hot">🔥 Contacto Caliente</span>
+    <span class="ej-bar-title">Alguien que ya te conoce</span>
+  </div>
+  <div class="ej-body">
+
+    <div class="ver-label">Versión A — Familiar o amiga cercana</div>
+    <div class="burbuja" id="c1a">Hola [Nombre]! Cómo estás? Tenía tiempo sin saber de ti 😊
+¿Cómo va todo con [algo que sabes de su vida — trabajo, familia, negocio]?</div>
+    <button class="copy-btn" onclick="cp('c1a',this)">📋 Copiar mensaje</button>
+
+    <div class="ver-label">Versión B — Conocida, excompañera de trabajo o escuela</div>
+    <div class="burbuja" id="c1b">Hola [Nombre]! Qué gusto escribirte 😊
+Vi que estás en [algo que viste en su perfil o que sabes de ella].
+¿Cómo te ha ido con eso? ¿Todo bien?</div>
+    <button class="copy-btn" onclick="cp('c1b',this)">📋 Copiar mensaje</button>
+
+    <div class="ver-label">Versión C — Referida por alguien de tu equipo o círculo</div>
+    <div class="burbuja" id="c1c">Hola [Nombre], te escribe Ale Torres 👋
+[Nombre del referidor] me habló muy bien de ti — me dijo que eres alguien que siempre está en movimiento y buscando crecer.
+¿Me puedo tomar un momento para hacerte una pregunta rápida?</div>
+    <button class="copy-btn" onclick="cp('c1c',this)">📋 Copiar mensaje</button>
+
+    <div class="ej-tips">
+      <div class="etip">
+        <div class="etip-dot dot-ok">✓</div>
+        <div class="etip-text"><b>Por qué funciona:</b> Abre con algo real de su vida. No parece mensaje masivo — parece que la recordaste de verdad.</div>
+      </div>
+      <div class="etip">
+        <div class="etip-dot dot-no">✕</div>
+        <div class="etip-text"><b>Error a evitar:</b> No menciones el negocio aquí. Si lo abres con "tengo algo que puede interesarte" — cierras la puerta antes de abrirla.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- WHATSAPP -->
+<div class="ej-card">
+  <div class="ej-bar">
+    <span class="badge b-wa">WhatsApp</span>
+    <span class="ej-bar-title">Seguimiento después de un tiempo</span>
+  </div>
+  <div class="ej-body">
+
+    <div class="ver-label">Versión A — No tienes mucho contexto de ella</div>
+    <div class="burbuja" id="c2a">Hola [Nombre]! Hace tiempo que no hablamos.
+¿Cómo estás? ¿Cómo van las cosas por allá?</div>
+    <button class="copy-btn" onclick="cp('c2a',this)">📋 Copiar mensaje</button>
+
+    <div class="ver-label">Versión B — Sabes que está en una etapa de cambio (nuevo trabajo, mudanza, etc.)</div>
+    <div class="burbuja" id="c2b">Hola [Nombre] 😊 Vi que [empezaste nuevo trabajo / te mudaste / etc.] — cómo te ha ido con ese cambio?
+Siempre me da curiosidad saber cómo les va a las personas que conozco cuando dan un paso así.</div>
+    <button class="copy-btn" onclick="cp('c2b',this)">📋 Copiar mensaje</button>
+
+    <div class="ver-label">Versión C — Ella compartió algo de dinero o trabajo en sus estados de WA</div>
+    <div class="burbuja" id="c2c">Vi tu estado y me quedé pensando 🤔
+Oye, ¿todo bien con lo del trabajo? ¿O solo fue un desahogo del momento? 😄</div>
+    <button class="copy-btn" onclick="cp('c2c',this)">📋 Copiar mensaje</button>
+
+    <div class="ej-tips">
+      <div class="etip">
+        <div class="etip-dot dot-ok">✓</div>
+        <div class="etip-text"><b>Por qué funciona:</b> Usas información real de su vida. Eso muestra que la observas, no que la eligiste al azar.</div>
+      </div>
+      <div class="etip">
+        <div class="etip-dot dot-no">✕</div>
+        <div class="etip-text"><b>Error a evitar:</b> No mandes audio de 3 minutos de primer mensaje. Texto corto primero — el audio viene cuando ya hay conversación.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- INSTAGRAM -->
+<div class="ej-card">
+  <div class="ej-bar">
+    <span class="badge b-ig">Instagram DM</span>
+    <span class="ej-bar-title">Desde Stories, posts o comentarios</span>
+  </div>
+  <div class="ej-body">
+
+    <div class="ver-label">Versión A — Reaccionaste a su Story</div>
+    <div class="burbuja" id="c3a">Hola [Nombre] 👋
+Vi tu story de [tema] y me resonó mucho.
+¿Eso te pasa seguido o fue algo de ese día en particular?</div>
+    <button class="copy-btn" onclick="cp('c3a',this)">📋 Copiar mensaje</button>
+
+    <div class="ver-label">Versión B — Comentó o guardó algo tuyo</div>
+    <div class="burbuja" id="c3b">Hola [Nombre]! Gracias por [comentar / guardar] mi [post / reel] ❤️
+Cuando vi tu comentario me pregunté: ¿eso que escribiste viene de algo que estás viviendo ahorita?</div>
+    <button class="copy-btn" onclick="cp('c3b',this)">📋 Copiar mensaje</button>
+
+    <div class="ver-label">Versión C — Persona que sigue tu cuenta pero no interactúa mucho</div>
+    <div class="burbuja" id="c3c">Hola [Nombre]! Veo que seguimos desde hace tiempo pero nunca hemos hablado 😄
+¿A qué te dedicas? Me da curiosidad saber quiénes me siguen.</div>
+    <button class="copy-btn" onclick="cp('c3c',this)">📋 Copiar mensaje</button>
+
+    <div class="ej-tips">
+      <div class="etip">
+        <div class="etip-dot dot-ok">✓</div>
+        <div class="etip-text"><b>Por qué funciona:</b> Citar algo específico de ella demuestra que la viste de verdad — eso diferencia a una networker profesional de una vendedora de spam.</div>
+      </div>
+      <div class="etip">
+        <div class="etip-dot dot-no">✕</div>
+        <div class="etip-text"><b>Error a evitar:</b> No respondas sus comentarios públicamente con tu link. Eso espanta y parece desesperación.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sep-thick"></div>
+
+<!-- ══════════════════════════════
+  FASE 2 — CALIFICACIÓN
+══════════════════════════════ -->
+<div class="sec-label" style="color:var(--f2)">Fase 2</div>
+<div class="sec-title">Calificación</div>
+<div class="sec-intro">Ya respondió. Ahora descubres si tiene perfil — sin interrogar.</div>
+
+<div class="tips-box">
+  <div class="tips-title t-f2">✦ Qué buscas descubrir</div>
+
+  <div class="tip-row">
+    <div class="tip-icon-wrap ti-f2">💸</div>
+    <div class="tip-content">
+      <strong>¿Tiene una necesidad económica?</strong>
+      <span>¿Le alcanza el dinero? ¿Quiere más libertad financiera o más estabilidad?</span>
+    </div>
+  </div>
+
+  <div class="tip-row">
+    <div class="tip-icon-wrap ti-f2">⏰</div>
+    <div class="tip-content">
+      <strong>¿Tiene tiempo disponible?</strong>
+      <span>Aunque sea pocas horas al día. No necesita ser tiempo completo para empezar.</span>
+    </div>
+  </div>
+
+  <div class="tip-row">
+    <div class="tip-icon-wrap ti-f2">🚪</div>
+    <div class="tip-content">
+      <strong>¿Está abierta al cambio?</strong>
+      <span>¿Tiene mentalidad de explorar o está completamente cerrada a ideas nuevas?</span>
+    </div>
+  </div>
+
+  <div class="tip-row">
+    <div class="tip-icon-wrap ti-f2">⚠️</div>
+    <div class="tip-content">
+      <strong>Una pregunta por mensaje, no todas juntas</strong>
+      <span>Si mandas 3 preguntas en un solo mensaje parece formulario, no conversación real.</span>
+    </div>
+  </div>
+</div>
+
+<div class="ej-intro">
+  <div class="ej-intro-icon">📌</div>
+  <div class="ej-intro-text"><b>Ejemplos de calificación natural</b> — así suena una networker profesional:</div>
+</div>
+
+<div class="ej-card">
+  <div class="ej-bar">
+    <span class="badge b-hot">🔥 Contacto Caliente</span>
+    <span class="ej-bar-title">Secuencia completa — 3 mensajes</span>
+  </div>
+  <div class="ej-body">
+
+    <div class="ver-label">Mensaje 1 — Pregunta de apertura</div>
+    <div class="burbuja" id="q1">Oye, una pregunta curiosa: aparte de lo que haces ahorita, ¿estás abierta a explorar otras formas de generar ingresos o estás muy enfocada solo en lo que tienes?</div>
+    <button class="copy-btn" onclick="cp('q1',this)">📋 Copiar mensaje</button>
+
+    <div class="ver-label">Mensaje 2 — Cuando responde "sí" o "depende"</div>
+    <div class="burbuja" id="q2">Qué interesante! Y dime, ¿qué es lo que más te gustaría cambiar en tu situación ahorita? ¿Tener más ingresos, tener más tiempo libre, o las dos cosas? 😄</div>
+    <button class="copy-btn" onclick="cp('q2',this)">📋 Copiar mensaje</button>
+
+    <div class="ver-label">Mensaje 3 — Después de que comparte su situación</div>
+    <div class="burbuja" id="q3">Entiendo perfectamente lo que me dices.
+Y si encontraras algo que realmente valiera la pena, ¿cuántas horas al día crees que podrías dedicarle?</div>
+    <button class="copy-btn" onclick="cp('q3',this)">📋 Copiar mensaje</button>
+
+    <div class="ej-tips">
+      <div class="etip">
+        <div class="etip-dot dot-ok">✓</div>
+        <div class="etip-text"><b>Por qué funciona:</b> Cuando alguien dice su dolor en voz alta, lo siente más real. No necesitas convencer — se convencen solas.</div>
+      </div>
+      <div class="etip">
+        <div class="etip-dot dot-no">✕</div>
+        <div class="etip-text"><b>Error a evitar:</b> No ofrezcas la solución antes de que terminen de contar el problema. Escucha primero, siempre.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ej-card">
+  <div class="ej-bar">
+    <span class="badge b-wa">WhatsApp</span>
+    <span class="ej-bar-title">Tiene trabajo fijo o negocio propio</span>
+  </div>
+  <div class="ej-body">
+
+    <div class="ver-label">Versión A — Tiene trabajo fijo</div>
+    <div class="burbuja" id="q4">Qué bien que tienes tu trabajo 💪
+Dime una cosa, ¿ese trabajo te está dando la libertad que quieres? ¿O sientes que el dinero siempre llega justo?</div>
+    <button class="copy-btn" onclick="cp('q4',this)">📋 Copiar mensaje</button>
+
+    <div class="ver-label">Versión B — Tiene su propio negocio</div>
+    <div class="burbuja" id="q5">Tener tu propio negocio es un paso enorme, de verdad 👏
+Y cuéntame, ¿qué es lo más difícil ahorita — conseguir clientes, el flujo de caja, o el tiempo para todo?</div>
+    <button class="copy-btn" onclick="cp('q5',this)">📋 Copiar mensaje</button>
+
+    <div class="ej-tips">
+      <div class="etip">
+        <div class="etip-dot dot-ok">✓</div>
+        <div class="etip-text"><b>Por qué funciona:</b> Adaptas el lenguaje a su realidad. No suenas como vendedora — suenas como alguien que genuinamente quiere entenderla.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sep-thick"></div>
+
+<!-- ══════════════════════════════
+  FASE 3 — DESPERTAR
+══════════════════════════════ -->
+<div class="sec-label" style="color:var(--f3)">Fase 3</div>
+<div class="sec-title">Despertar</div>
+<div class="sec-intro">Conectas su dolor con la posibilidad de cambio. Usando sus palabras, no las tuyas.</div>
+
+<div class="tips-box">
+  <div class="tips-title t-f3">✦ Cómo funciona el despertar</div>
+
+  <div class="tip-row">
+    <div class="tip-icon-wrap ti-f3">🪞</div>
+    <div class="tip-content">
+      <strong>Usa una historia como espejo</strong>
+      <span>Tu historia o la de alguien de tu equipo. Que ella se vea en esa historia.</span>
+    </div>
+  </div>
+
+  <div class="tip-row">
+    <div class="tip-icon-wrap ti-f3">🗣️</div>
+    <div class="tip-content">
+      <strong>Usa exactamente SUS palabras</strong>
+      <span>Si dijo "libertad", tú hablas de libertad. Si dijo "estabilidad", tú hablas de estabilidad.</span>
+    </div>
+  </div>
+
+  <div class="tip-row">
+    <div class="tip-icon-wrap ti-f3">🚫</div>
+    <div class="tip-content">
+      <strong>Todavía NO explicas el negocio</strong>
+      <span>Solo introduces que existe otra forma. Los detalles van en el Zoom.</span>
+    </div>
+  </div>
+
+  <div class="tip-row">
+    <div class="tip-icon-wrap ti-f3">❓</div>
+    <div class="tip-content">
+      <strong>Cierra siempre con una pregunta</strong>
+      <span>Que ella responda sí o no. Si dice sí, ya quiere saber más.</span>
+    </div>
+  </div>
+</div>
+
+<div class="ej-intro">
+  <div class="ej-intro-icon">📌</div>
+  <div class="ej-intro-text"><b>Mensajes para despertar el interés</b> — con historia y prueba social:</div>
+</div>
+
+<div class="ej-card">
+  <div class="ej-bar">
+    <span class="badge b-wa">WhatsApp</span>
+    <span class="ej-bar-title">Con tu historia personal</span>
+  </div>
+  <div class="ej-body">
+    <div class="ver-label">Mensaje completo</div>
+    <div class="burbuja" id="d1">Sabes, lo que me cuentas me recuerda exactamente a cómo estaba yo hace [tiempo].
+
+Trabajaba duro, tenía ingresos, pero el dinero siempre llegaba justo. Y lo peor era que si yo paraba, el dinero también paraba.
+
+Hasta que alguien me mostró que existía una forma de generar ingresos que no dependía solo de mis horas. Al principio dudé — no lo voy a mentir.
+
+Pero decidí al menos entender cómo funcionaba. Y eso lo cambió todo.
+
+¿Alguna vez has pensado en generar ingresos de una forma que no sea solo cambiar tu tiempo por dinero?</div>
+    <button class="copy-btn" onclick="cp('d1',this)">📋 Copiar mensaje</button>
+
+    <div class="ej-tips">
+      <div class="etip">
+        <div class="etip-dot dot-ok">✓</div>
+        <div class="etip-text"><b>Por qué funciona:</b> Te ven en su pasado y te ven a ti como su futuro posible. La pregunta final la hace imaginar ese escenario — si dice sí, ya la convenciste emocionalmente.</div>
+      </div>
+      <div class="etip">
+        <div class="etip-dot dot-no">✕</div>
+        <div class="etip-text"><b>Error a evitar:</b> No exageres los números. "Gané $10,000 el primer mes" genera desconfianza inmediata y destruye la credibilidad.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ej-card">
+  <div class="ej-bar">
+    <span class="badge b-ig">Instagram DM</span>
+    <span class="ej-bar-title">Con historia de alguien de tu equipo</span>
+  </div>
+  <div class="ej-body">
+    <div class="ver-label">Mensaje — Prueba social de tercero</div>
+    <div class="burbuja" id="d2">Mira, lo que me dices me hace pensar en [nombre, ej. Valeria de Colombia].
+
+Ella estaba en una situación muy parecida a la tuya. Decidió probar algo diferente sin dejar lo que tenía.
+
+En [tiempo real, ej. 3 meses] ya tenía sus primeros ingresos extra. Hoy tiene su propio equipo.
+
+No te digo que sea igual para todos — sería deshonesto. Pero me da mucha curiosidad saber... ¿estarías abierta a conocer más sobre lo que hacemos?</div>
+    <button class="copy-btn" onclick="cp('d2',this)">📋 Copiar mensaje</button>
+
+    <div class="ej-tips">
+      <div class="etip">
+        <div class="etip-dot dot-ok">✓</div>
+        <div class="etip-text"><b>Por qué funciona:</b> "Alguien como yo lo logró" activa la esperanza. La pregunta final le da el control — no siente presión, siente que decide ella.</div>
+      </div>
+      <div class="etip">
+        <div class="etip-dot dot-no">✕</div>
+        <div class="etip-text"><b>Error a evitar:</b> No inventes el testimonio. Si entra y no es real, pierdes toda tu credibilidad de golpe.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ej-card">
+  <div class="ej-bar">
+    <span class="badge b-obj">Objeción frecuente</span>
+    <span class="ej-bar-title">"¿Eso no es multinivel?"</span>
+  </div>
+  <div class="ej-body">
+    <div class="ver-label">Cómo responder sin ponerte a la defensiva</div>
+    <div class="burbuja" id="d3">Entiendo perfectamente por qué lo preguntas — yo también lo pensé al principio 😄
+
+Lo que hacemos es economía colaborativa y posicionamiento digital. No vendemos de puerta en puerta ni presionamos a nadie.
+
+Pero más que explicarte con palabras, prefiero que lo veas tú misma. Para eso existe el Zoom — para que hagas las preguntas que quieras y saques tus propias conclusiones.
+
+¿Qué pierdes con escuchar 45 minutos si puedes llevarte información útil aunque decidas que no es para ti?</div>
+    <button class="copy-btn" onclick="cp('d3',this)">📋 Copiar mensaje</button>
+
+    <div class="ej-tips">
+      <div class="etip">
+        <div class="etip-dot dot-ok">✓</div>
+        <div class="etip-text"><b>Por qué funciona:</b> Validas su duda en vez de atacarla. Eso baja la resistencia y abre la puerta a escuchar.</div>
+      </div>
+      <div class="etip">
+        <div class="etip-dot dot-no">✕</div>
+        <div class="etip-text"><b>Error a evitar:</b> No expliques el plan de compensación por mensaje. Es un camino sin salida.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sep-thick"></div>
+
+<!-- ══════════════════════════════
+  FASE 4 — ZOOM
+══════════════════════════════ -->
+<div class="sec-label" style="color:var(--f4)">Fase 4</div>
+<div class="sec-title">Invitación al Zoom</div>
+<div class="sec-intro">La invitación llega cuando ya quiere saber más. No antes.</div>
+
+<div class="tips-box">
+  <div class="tips-title t-f4">✦ Reglas de la invitación</div>
+
+  <div class="tip-row">
+    <div class="tip-icon-wrap ti-f4">📅</div>
+    <div class="tip-content">
+      <strong>Siempre da 2 opciones de horario</strong>
+      <span>Nunca preguntes "¿cuándo puedes?" — eso termina en "te aviso" que nunca llega.</span>
+    </div>
+  </div>
+
+  <div class="tip-row">
+    <div class="tip-icon-wrap ti-f4">⏱️</div>
+    <div class="tip-content">
+      <strong>Siempre di "45 minutos"</strong>
+      <span>No "una hora". 45 minutos suena más manejable y genera menos resistencia.</span>
+    </div>
+  </div>
+
+  <div class="tip-row">
+    <div class="tip-icon-wrap ti-f4">🔗</div>
+    <div class="tip-content">
+      <strong>El link lo mandas 30 min antes</strong>
+      <span>No al confirmar. Si lo mandas días antes, se pierde en el chat y nadie lo encuentra.</span>
+    </div>
+  </div>
+
+  <div class="tip-row">
+    <div class="tip-icon-wrap ti-f4">🔔</div>
+    <div class="tip-content">
+      <strong>Seguimiento si no entró — sin reclamo</strong>
+      <span>Un mensaje cálido al día siguiente reabre la puerta que parecía cerrada.</span>
+    </div>
+  </div>
+</div>
+
+<div class="ej-intro">
+  <div class="ej-intro-icon">📌</div>
+  <div class="ej-intro-text"><b>Mensajes listos</b> para invitar, confirmar y dar seguimiento:</div>
+</div>
+
+<div class="ej-card">
+  <div class="ej-bar">
+    <span class="badge b-wa">WhatsApp</span>
+    <span class="ej-bar-title">Invitación con 2 horarios</span>
+  </div>
+  <div class="ej-body">
+
+    <div class="ver-label">Mensaje de invitación</div>
+    <div class="burbuja" id="z1">Perfecto, [Nombre]. Creo que vale mucho la pena que lo veas con tus propios ojos.
+
+Tenemos una sesión en vivo de 45 minutos donde te explican todo con claridad, puedes hacer las preguntas que quieras y decides tú si es para ti o no. Sin presión.
+
+¿Qué te funciona mejor — [día 1] a las [hora 1] o [día 2] a las [hora 2]?</div>
+    <button class="copy-btn" onclick="cp('z1',this)">📋 Copiar mensaje</button>
+
+    <div class="ver-label">Confirmación — Cuando elige su horario</div>
+    <div class="burbuja" id="z2">Listo! ✅ Quedamos el [día] a las [hora].
+Te mando el link 30 minutitos antes para que lo tengas a la mano.
+Solo te pido que entres puntual — la sesión arranca en punto y no quiero que te pierdas nada 😊</div>
+    <button class="copy-btn" onclick="cp('z2',this)">📋 Copiar mensaje</button>
+
+    <div class="ver-label">Recordatorio — 1 hora antes</div>
+    <div class="burbuja" id="z3">Hola [Nombre]! 👋 En una hora es nuestra sesión.
+Aquí va el link:
+🔗 [link de Zoom]
+
+Entra unos minutos antes si puedes. ¡Nos vemos ahí! 🙌</div>
+    <button class="copy-btn" onclick="cp('z3',this)">📋 Copiar mensaje</button>
+
+    <div class="ver-label">Si no entró — Al día siguiente</div>
+    <div class="burbuja" id="z4">Hola [Nombre], te extrañamos ayer 😄
+¿Todo bien? ¿Pasó algo?
+Tenemos otra sesión el [fecha]. ¿Te anoto?</div>
+    <button class="copy-btn" onclick="cp('z4',this)">📋 Copiar mensaje</button>
+
+    <div class="ej-tips">
+      <div class="etip">
+        <div class="etip-dot dot-ok">✓</div>
+        <div class="etip-text"><b>Por qué funciona:</b> 2 opciones concretas acelera la decisión. El tono de puntualidad establece que esto es un negocio serio.</div>
+      </div>
+      <div class="etip">
+        <div class="etip-dot dot-no">✕</div>
+        <div class="etip-text"><b>Error a evitar:</b> No mandes el link sin fecha confirmada. Se pierde y nadie entra. Tampoco digas "¿por qué no entraste?" si faltó — eso suena a reclamo.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sep-thick"></div>
+
+<!-- ══════════════════════════════
+  ERRORES FATALES
+══════════════════════════════ -->
+<div class="sec-label" style="color:#E07070">Lo que destruye el proceso</div>
+<div class="sec-title">Errores que debes evitar</div>
+<div class="sec-intro">Comparte esto con todo tu equipo — son los errores más comunes que queman prospectos buenos.</div>
+
+<div class="errores-wrap">
+
+  <div class="err-card">
+    <div class="err-top">
+      <div class="err-x">✕</div>
+      <div class="err-mal-text">"Tengo algo increíble que te va a cambiar la vida"</div>
+    </div>
+    <div class="err-bottom">
+      <div class="err-check">✓</div>
+      <div class="err-ok-text">Nunca abres con el pitch. Primero la persona, luego la oportunidad. Siempre.</div>
+    </div>
+  </div>
+
+  <div class="err-card">
+    <div class="err-top">
+      <div class="err-x">✕</div>
+      <div class="err-mal-text">Mandar el video, catálogo o plan de compensación antes del Zoom</div>
+    </div>
+    <div class="err-bottom">
+      <div class="err-check">✓</div>
+      <div class="err-ok-text">Con información incompleta toman decisiones incompletas. Lleva siempre al Zoom primero — ahí se explica todo.</div>
+    </div>
+  </div>
+
+  <div class="err-card">
+    <div class="err-top">
+      <div class="err-x">✕</div>
+      <div class="err-mal-text">"¿Cuándo tienes tiempo?" sin dar opciones concretas</div>
+    </div>
+    <div class="err-bottom">
+      <div class="err-check">✓</div>
+      <div class="err-ok-text">Siempre 2 horarios específicos. "¿Cuándo puedes?" termina en "te aviso" que nunca llega.</div>
+    </div>
+  </div>
+
+  <div class="err-card">
+    <div class="err-top">
+      <div class="err-x">✕</div>
+      <div class="err-mal-text">Ponerse a la defensiva ante "¿eso es una pirámide?"</div>
+    </div>
+    <div class="err-bottom">
+      <div class="err-check">✓</div>
+      <div class="err-ok-text">Valida primero: "Entiendo que lo preguntes, yo también lo pensé." Luego invita al Zoom sin pelear.</div>
+    </div>
+  </div>
+
+  <div class="err-card">
+    <div class="err-top">
+      <div class="err-x">✕</div>
+      <div class="err-mal-text">Copiar y pegar el mismo mensaje a 50 personas sin personalizar</div>
+    </div>
+    <div class="err-bottom">
+      <div class="err-check">✓</div>
+      <div class="err-ok-text">Un mensaje con 1 detalle personal convierte 5 veces más. La personalización es la diferencia entre networker y spam.</div>
+    </div>
+  </div>
+
+  <div class="err-card">
+    <div class="err-top">
+      <div class="err-x">✕</div>
+      <div class="err-mal-text">Abandonar al prospecto si no responde al primer mensaje</div>
+    </div>
+    <div class="err-bottom">
+      <div class="err-check">✓</div>
+      <div class="err-ok-text">El 80% de las ventas ocurren entre el 5° y el 12° contacto. El seguimiento cálido y sin presión es donde está el dinero.</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="sep-thick"></div>
+
+<!-- ══════════════════════════════
+  REGLAS DE ORO
+══════════════════════════════ -->
+<div class="sec-label" style="color:var(--gold)">Fundamentos</div>
+<div class="sec-title">Las 6 Reglas de Oro</div>
+<div class="sec-intro">Aplican siempre, en toda la prospección, sin excepción.</div>
+
+<div class="reglas-grid">
+
+  <div class="regla-card rg-1">
+    <div class="rg-num">01</div>
+    <div class="rg-title">Primero la relación</div>
+    <div class="rg-text">Nadie compra de alguien en quien no confía. La persona siempre va antes que el negocio.</div>
+  </div>
+
+  <div class="regla-card rg-2">
+    <div class="rg-num">02</div>
+    <div class="rg-title">Escucha más de lo que hablas</div>
+    <div class="rg-text">El 70% del tiempo debe ser el prospecto hablando. Tú preguntas y escuchas.</div>
+  </div>
+
+  <div class="regla-card rg-3">
+    <div class="rg-num">03</div>
+    <div class="rg-title">No saltes fases</div>
+    <div class="rg-text">Invitar al Zoom sin calificar es como proponer matrimonio en la primera cita.</div>
+  </div>
+
+  <div class="regla-card rg-4">
+    <div class="rg-num">04</div>
+    <div class="rg-title">Usa su lenguaje</div>
+    <div class="rg-text">Si dice "libertad", hablas de libertad. Si dice "seguridad", hablas de seguridad.</div>
+  </div>
+
+  <div class="regla-card rg-5">
+    <div class="rg-num">05</div>
+    <div class="rg-title">El seguimiento es el negocio</div>
+    <div class="rg-text">La mayoría del dinero está en quienes dijeron "quizás". No te rindas con ellas.</div>
+  </div>
+
+  <div class="regla-card rg-6">
+    <div class="rg-num">06</div>
+    <div class="rg-title">Tú filtras, no suplicas</div>
+    <div class="rg-text">No todos tienen perfil y está bien. Tu postura de abundancia es tu mayor atractivo.</div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-brand">AUREX</div>
+  <div class="footer-sub">Riqueza en Expansión · @aletorreslatam</div>
+</div>
+
+<script>
+function cp(id, btn) {
+  const el = document.getElementById(id);
+  const txt = el.innerText.trim();
+  navigator.clipboard.writeText(txt).then(() => {
+    const orig = btn.innerHTML;
+    btn.innerHTML = '✅ Copiado!';
+    btn.classList.add('ok');
+    setTimeout(() => { btn.innerHTML = orig; btn.classList.remove('ok'); }, 2000);
+  });
+}
+</script>
+</body>
+</html>
